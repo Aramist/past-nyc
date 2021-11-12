@@ -65,6 +65,7 @@ Optional:
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
 <img src="https://imgur.com/a/ryN75f0" width=600>
+Link: https://imgur.com/a/ryN75f0
 
 ### [BONUS] Digital Wireframes & Mockups
 
