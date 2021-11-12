@@ -1,7 +1,7 @@
 Original App Design Project - README Template
 ===
 
-# APP_NAME_HERE
+# PAST NYC (tbd)
 
 ## Table of Contents
 1. [Overview](#Overview)
@@ -11,16 +11,16 @@ Original App Design Project - README Template
 
 ## Overview
 ### Description
-[Description of your app]
+This app will use your GPS location and show you how the area you're in looked like in the early 1900s. 
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
-- **Category:**
-- **Mobile:**
-- **Story:**
-- **Market:**
-- **Habit:**
-- **Scope:**
+- **Category:** Education
+- **Mobile:** This app would most likely be mobile.
+- **Story:** Analyzes location data and retrieves the closest image from the early 1900s taken nearest to your location. (e.g if you're standing on Astor Pl. you'll see the crossroad of Lafayette St. and Astor Pl. or Broadway and 8th St.)
+- **Market:** Anyone will be able to use this app. No groupings neccesary
+- **Habit:** This app could be used as often as one would like. It would mostly be used for educational purpose.
+- **Scope:** First we can use this app to engage people with the history of NYC. This could evolve to other cities where different version of this app could exist like "PAST Paris" or "PAST London".
 
 ## Product Spec
 
@@ -28,43 +28,43 @@ Original App Design Project - README Template
 
 **Required Must-have Stories**
 
-* [fill in your required user stories here]
-* ...
+* User can view their location on a Map
+* User can view pictures taken nearest to their location
 
 **Optional Nice-to-have Stories**
 
-* [fill in your required user stories here]
-* ...
+* User can register for an account
+* User can have a favorites section
 
 ### 2. Screen Archetypes
 
-* [list first screen here]
-   * [list associated required story here]
-   * ...
-* [list second screen here]
-   * [list associated required story here]
-   * ...
+* Map View Screen
+   * Allows user to view their current location on a map
+   * Has a "show nearest picture" option
+
+* Nearest Picture Screen
+   * Shows user the picture of the nearest intersection.
+   * Allows user to go back and forth with the next closest picture
+   * Shows crossroad names.
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* [fill out your first tab]
-* [fill out your second tab]
-* [fill out your third tab]
+* "View Map"
+* "View Picture"
+
+Optional:
+* "Favorites"
 
 **Flow Navigation** (Screen to Screen)
 
-* [list first screen here]
-   * [list screen navigation here]
-   * ...
-* [list second screen here]
-   * [list screen navigation here]
-   * ...
+* Show All NYC -> Seperates by boroughs 
+* Show Near me -> Shows pictures taken closest to user
 
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+<img src="https://imgur.com/a/ryN75f0" width=600>
 
 ### [BONUS] Digital Wireframes & Mockups
 
