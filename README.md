@@ -93,6 +93,41 @@ User model:
 | favoritePhotos | [HistoricalImage] | Images saved by the user         |
 
 ### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+- Requests:
+    - Main map screen
+        - (Read) Get nearby images from local cache:
+        - ```swift
+            fileprivate func fetchImages(inRange coordinateRange: [(Float, Float)], withContext context: NSManagedObjectContext) throws -> [HistoricalImage]?{
+            let request = HistoricalImage.fetchRequest()
+            request.fetchLimit = 5
+            // The first element of coordinateRange is the south-west corner of the search region
+            // The second element is the north-east corner
+            let predicate = NSPredicate(
+                format: "(%K >= %@) && (%K <= %@) && (%K >= %@) && (%K <= %@)",
+                argumentArray: [
+                    #keyPath(HistoricalImage.latitude), coordinateRange[0].0,
+                    #keyPath(HistoricalImage.latitude), coordinateRange[1].0,
+                    #keyPath(HistoricalImage.longitude), coordinateRange[0].1,
+                    #keyPath(HistoricalImage.longitude), coordinateRange[1].1
+                ]
+            )
+            request.predicate = predicate
+
+            request.propertiesToFetch = ["photoID", "latitude", "longitude", "thumbnailURL", "imageWidth", "imageHeight"]
+
+            do {
+                let nearbyImages = try context.fetch(request)
+                return nearbyImages
+            }
+            catch {
+                print(error)
+                return nil
+            }
+        }
+        ```
+Endpoints:
+- NYPL Old NYC image database:
+| Resource              | Type  | URL                                          |
+|-----------------------|-------|----------------------------------------------|
+| Thumbnail Image       | Image | http://oldnyc-assets.nypl.org/thumb/<id>.jpg |
+| Full Resolution Image | Image | http://oldnyc-assets.nypl.org/600px/<id>.jpg |
