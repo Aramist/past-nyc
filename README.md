@@ -127,7 +127,9 @@ User model:
     ```
 Endpoints:
 - NYPL Old NYC image database:
+
 | Resource              | Type  | URL                                          |
 |-----------------------|-------|----------------------------------------------|
 | Thumbnail Image       | Image | http://oldnyc-assets.nypl.org/thumb/<id>.jpg |
 | Full Resolution Image | Image | http://oldnyc-assets.nypl.org/600px/<id>.jpg |
+
