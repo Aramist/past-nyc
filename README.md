@@ -123,7 +123,8 @@ User model:
                 print(error)
                 return nil
             }
-        }```
+        }
+    ```
 Endpoints:
 - NYPL Old NYC image database:
 | Resource              | Type  | URL                                          |
