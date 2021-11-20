@@ -74,7 +74,24 @@ Link: https://imgur.com/a/ryN75f0
 ## Schema 
 [This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+Historical Image model:
+| Property     | Type   | Description                                                         |
+|--------------|--------|---------------------------------------------------------------------|
+| photoURL     | String | A URL to the historical image                                       |
+| thumbnailURL | String | A URL to a minified version of the image                            |
+| photoID      | String | A unique ID for the photograph in NYPL servers                      |
+| latitude     | Float  | Latitude component of image location                                |
+| longitude    | Float  | Longitude component of image location                               |
+| intersection | String | A name for the intersection or address at which the photo was taken |
+
+
+User model:
+| Property       | Type              | Description                      |
+|----------------|-------------------|----------------------------------|
+| username       | String            | A unique identifier for the user |
+| password       | String            | A secure code to verify the user |
+| favoritePhotos | [HistoricalImage] | Images saved by the user         |
+
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
