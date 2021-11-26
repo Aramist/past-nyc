@@ -107,7 +107,6 @@ extension ExploreMapViewController: MKMapViewDelegate {
     /// Loads and pushes the relevant cluster detail view controller upon selecting a pop-up annotation
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         exploreMap.deselectAnnotation(view.annotation, animated: false)
-        
         guard let imageGroup = view.annotation as? ImageGroup else {return}
         let vc = storyboard?.instantiateViewController(
             withIdentifier: ClusterDetailViewController.storyboardID)

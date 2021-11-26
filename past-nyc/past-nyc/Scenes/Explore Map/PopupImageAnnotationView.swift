@@ -46,13 +46,14 @@ class PopupImageAnnotationView: UIView {
     }()
     
     var aspectRatioConstraint: NSLayoutConstraint?
+    var oldDrawLayer: CALayer?
     var previewImage: HistoricalImage?
     var clusterSize: Int = 0
     
     
     // MARK: Inherited methods
     init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: annotationWidth, height: annotationWidth))
+        super.init(frame: CGRect(x: -200, y: 0, width: annotationWidth, height: annotationWidth))
         isHidden = true
         setupSubviews()
     }
@@ -62,7 +63,7 @@ class PopupImageAnnotationView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        drawBackground()
+        drawBackground(forSize: rect.size)
         super.draw(rect)
     }
     
@@ -181,19 +182,24 @@ class PopupImageAnnotationView: UIView {
         self.aspectRatioConstraint = aspectRatioConstraint
         self.addConstraint(aspectRatioConstraint)
         aspectRatioConstraint.isActive = true
+        let newSize = CGSize(width: annotationWidth, height: annotationWidth * aspectRatio + cornerPointHeight)
+        drawBackground(forSize: newSize)
+        layer.setNeedsLayout()
         setNeedsDisplay()
     }
     
     /// Draws the background as a white rounded rectangle with a pointed bottom-left corner
-    fileprivate func drawBackground() {
+    fileprivate func drawBackground(forSize size: CGSize) {
         // Housekeeping
         let drawLayer = CAShapeLayer()
         drawLayer.contentsScale = UIScreen.main.scale
         drawLayer.isOpaque = false  // False because the region right of the pointed corner is transparent
+        oldDrawLayer?.removeFromSuperlayer()
+        oldDrawLayer = drawLayer
         layer.addSublayer(drawLayer)
         
-        let width: CGFloat = bounds.size.width,
-            height: CGFloat =  bounds.size.height
+        let width: CGFloat = size.width,
+            height: CGFloat =  size.height
         let path = UIBezierPath()
         path.move(to: CGPoint(x: cornerRadius, y: 0))
         path.addLine(to: CGPoint(x: width - cornerRadius, y: 0))

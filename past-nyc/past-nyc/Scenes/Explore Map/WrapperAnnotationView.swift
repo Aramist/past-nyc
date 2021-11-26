@@ -53,6 +53,7 @@ class WrapperAnnotationView: MKAnnotationView {
     override func prepareForReuse() {
         super.prepareForReuse()
         childAnnotationView?.prepareForReuse()
+        centerOffset = CGPoint.zero
     }
     
     // MARK: Non-inherited methods
