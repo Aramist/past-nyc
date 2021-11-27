@@ -230,7 +230,6 @@ extension DataLoader: ImageSource {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         privateContext.parent = context
         privateContext.perform {
-            let startTime = Date()
             let data = try? self.fetchImages(inRange: coordRange, withContext: privateContext)
             guard let data = data else {
                 DispatchQueue.main.async { completion?([]) }
@@ -242,7 +241,6 @@ extension DataLoader: ImageSource {
             }.map {
                 $0.copyWithoutContext()
             }
-            print("Async request time: \(-startTime.timeIntervalSinceNow)")
             DispatchQueue.main.async {
                 completion?(copy)
             }

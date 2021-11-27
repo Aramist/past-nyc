@@ -24,6 +24,14 @@ class ExploreMapViewController: UIViewController {
     // Flag to ensure we don't interfere with the user's map exploration every time
     // their location updates
     var hasUpdatedToUserLocation = false
+    // Flag to avoid mapViewDidChangeVisibleRegion updates while the map is loading
+    var mapIsLoaded = false
+    // Coordinates for NYC's bounding box
+    fileprivate let NYCNorthWestBound = CLLocationCoordinate2D(latitude: 40.9162, longitude: -74.2591)
+    fileprivate let NYCSouthEastBound = CLLocationCoordinate2D(latitude: 40.4774, longitude: -73.7002)
+    // Max and min field of view for the camera, provided in meters
+    fileprivate let minCameraVisualField: Double = 400
+    fileprivate let maxCameraVisualField: Double = 10000
     
     deinit {
         exploreMap.delegate = nil
@@ -35,6 +43,8 @@ class ExploreMapViewController: UIViewController {
 
         imageSource = DataLoader.main
         exploreMap.delegate = self
+        
+        assignBoundingBox(to: exploreMap)
         
         centerMapAroundUser()
         exploreMap.register(
@@ -74,6 +84,24 @@ class ExploreMapViewController: UIViewController {
             longitudinalMeters: 400)
         exploreMap.setRegion(initialRegion, animated: true)
         mapViewDidChangeVisibleRegion(exploreMap)
+    }
+    
+    fileprivate func assignBoundingBox(to mapView: MKMapView) {
+        let center = CLLocationCoordinate2D(
+            latitude: (NYCNorthWestBound.latitude + NYCSouthEastBound.latitude) / 2,
+            longitude: (NYCNorthWestBound.longitude + NYCSouthEastBound.longitude) / 2)
+        let latDelta = abs(NYCNorthWestBound.latitude - NYCSouthEastBound.latitude)
+        let lonDelta = abs(NYCNorthWestBound.longitude - NYCSouthEastBound.longitude)
+        let coordSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
+        let boundary = MKCoordinateRegion(center: center, span: coordSpan)
+        mapView.setCameraBoundary(
+            MKMapView.CameraBoundary(coordinateRegion: boundary),
+            animated: false)
+        mapView.setCameraZoomRange(
+            MKMapView.CameraZoomRange(
+                minCenterCoordinateDistance: minCameraVisualField,
+                maxCenterCoordinateDistance: maxCameraVisualField),
+            animated: false)
     }
 }
 
@@ -124,12 +152,22 @@ extension ExploreMapViewController: MKMapViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    /// See comment on `mapIsLoaded`
+    func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+        mapIsLoaded = true
+    }
+    
+    /// Prevent too many annotations from showing at once, but only after user interaction
+    /// is done, to avoid excessive flickering
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         cullAnnotations()
     }
     
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-        guard let source = imageSource else {return}
+        guard mapIsLoaded,
+              let source = imageSource
+        else {return}
+        
         attemptUpdateActivePopups(for: mapView)
         asyncLoadNewAnnotations(for: mapView, fromImageSource: source)
     }

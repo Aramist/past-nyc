@@ -99,7 +99,6 @@
 				80C17043274F406E00397D63 /* AppDelegate.swift */,
 				80C17045274F406E00397D63 /* SceneDelegate.swift */,
 				80C17054274F406F00397D63 /* Info.plist */,
-				80C17062274FFA6C00397D63 /* DataLoader.swift */,
 			);
 			path = "past-nyc";
 			sourceTree = "<group>";
@@ -115,6 +114,7 @@
 		80C1705D274FFA0E00397D63 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				80C17062274FFA6C00397D63 /* DataLoader.swift */,
 				80C1706C27500ECD00397D63 /* HistoricalImage+CoreDataClass.swift */,
 				80C1706D27500ECD00397D63 /* HistoricalImage+CoreDataProperties.swift */,
 				80C1706E27500ECD00397D63 /* ImageGroup+CoreDataClass.swift */,
