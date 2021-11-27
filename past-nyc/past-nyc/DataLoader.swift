@@ -158,7 +158,13 @@ protocol ImageSource {
     /// Obtain new images from a given coordinate range
     func getImages(inRegion region: MKCoordinateRegion) -> [ImageGroup]
     /// Obtain new images from a given coordinate range, but exclude pre-acquired images
-    func newImages(inRegion region: MKCoordinateRegion, withPriorImages prior: [ImageGroup]) -> [ImageGroup]
+    func newImages(
+        inRegion region: MKCoordinateRegion,
+        withPriorImages prior: [ImageGroup]
+    ) -> [ImageGroup]
+    func testPrivateRequest(
+        inRegion region: MKCoordinateRegion,
+        completion: ((_ data: [ImageGroup]) -> ())? )
 }
 
 
@@ -201,5 +207,31 @@ extension DataLoader: ImageSource {
         }
         
         return newImages
+    }
+    
+    func testPrivateRequest(
+        inRegion region: MKCoordinateRegion,
+        completion: ((_ data: [ImageGroup]) -> ())?
+    ) {
+        let latDelta = region.span.latitudeDelta / 2,
+            lonDelta = region.span.longitudeDelta / 2
+        let coordRange = [
+            CLLocationCoordinate2D(latitude: region.center.latitude - latDelta, longitude: region.center.longitude - lonDelta),
+            CLLocationCoordinate2D(latitude: region.center.latitude + latDelta, longitude: region.center.longitude + lonDelta)
+        ]
+        let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        privateContext.parent = context
+        privateContext.perform {
+            let startTime = Date()
+            let data = try? self.fetchImages(inRange: coordRange, withContext: privateContext)
+            let copy = data?.map {
+                $0.copyWithoutContext()
+            }
+            print("Async request time: \(-startTime.timeIntervalSinceNow)")
+            DispatchQueue.main.async {
+                completion?(copy ?? [])
+            }
+        }
+        
     }
 }

@@ -31,6 +31,19 @@ public class HistoricalImage: NSManagedObject {
         parentGroup = parent
     }
     
+    func copyWithoutContext(withParent parent: ImageGroup) -> HistoricalImage {
+        let clone = NSManagedObject(entity: entity, insertInto: nil) as! HistoricalImage
+        clone.thumbnailURL = thumbnailURL
+        clone.fullsizeURL = fullsizeURL
+        clone.intersection = intersection
+        clone.nyplID = nyplID
+        clone.photoDescription = nil
+        clone.imageWidth = imageWidth
+        clone.imageHeight = imageHeight
+        clone.parentGroup = parent
+        return clone
+    }
+    
     var isWide: Bool {
         imageWidth > imageHeight
     }

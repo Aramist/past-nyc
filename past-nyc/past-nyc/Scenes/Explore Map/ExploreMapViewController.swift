@@ -14,7 +14,8 @@ class ExploreMapViewController: UIViewController {
     var imageSource: ImageSource?
     
     // The last time we've looped through annotations to find the nearest 5
-    var lastVicinityCheckTime = Date().addingTimeInterval(-5)
+    var lastVicinityCheckTime = Date().addingTimeInterval(-0.5)
+    var lastAsyncUpdate = Date().addingTimeInterval(-0.5)
     // The 5 (or fewer) annotations that have their image popup enabled
     var activeImageAnnotations: [ImageGroup] = []
     // Same point in the middle of city hall used as a placeholder in the Nearby Images scene
@@ -117,33 +118,14 @@ extension ExploreMapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         guard let source = imageSource else {return}
-        reloadAnnotations(from: source)
+//        reloadAnnotations(from: source)
     }
     
-    /// Activates the five nearest annotations and ensures the others are deactivated
+    
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-        guard lastVicinityCheckTime.timeIntervalSinceNow < -0.2 else {return}
-        lastVicinityCheckTime = Date()
-        
-        let onScreenAnnotations = mapView.annotations(in: MKMapRectForCoordinateRegion(region: mapView.region))
-        let closest = nearestImageGroups(fromSet: onScreenAnnotations, toPoint: mapView.centerCoordinate, limit: 5)
-        let diff = annotationDifference(betweenPriorAnnotations: activeImageAnnotations, postAnnotations: closest)
-        
-        activeImageAnnotations.removeAll {
-            diff.removedAnnotations.contains($0)
-        }
-        activeImageAnnotations.append(contentsOf: diff.addedAnnotations)
-        
-        diff.removedAnnotations.forEach {
-            if let group = exploreMap.view(for: $0) as? WrapperAnnotationView {
-                group.deactivate()
-            }
-        }
-        diff.addedAnnotations.forEach {
-            if let group = exploreMap.view(for: $0) as? WrapperAnnotationView {
-                group.activate()
-            }
-        }
+        guard let source = imageSource else {return}
+        attemptUpdateActivePopups(for: mapView)
+        testAsyncDataUpdate(for: mapView, withImageSource: source)
     }
     
     /// Taken from https://stackoverflow.com/questions/9270268/convert-mkcoordinateregion-to-mkmaprect
@@ -218,11 +200,51 @@ extension ExploreMapViewController: MKMapViewDelegate {
         }
     }
     
+    /// Activates the five nearest annotations and ensures the others are deactivated
+    fileprivate func attemptUpdateActivePopups(for mapView: MKMapView) {
+        guard lastVicinityCheckTime.timeIntervalSinceNow < -0.2 else {return}
+        lastVicinityCheckTime = Date()
+        
+        let onScreenAnnotations = mapView.annotations(in: MKMapRectForCoordinateRegion(region: mapView.region))
+        let closest = nearestImageGroups(fromSet: onScreenAnnotations, toPoint: mapView.centerCoordinate, limit: 5)
+        let diff = annotationDifference(betweenPriorAnnotations: activeImageAnnotations, postAnnotations: closest)
+
+        activeImageAnnotations.removeAll {
+            diff.removedAnnotations.contains($0)
+        }
+        activeImageAnnotations.append(contentsOf: diff.addedAnnotations)
+        
+        diff.removedAnnotations.forEach {
+            if let group = exploreMap.view(for: $0) as? WrapperAnnotationView {
+                group.deactivate()
+            }
+        }
+        diff.addedAnnotations.forEach {
+            if let group = exploreMap.view(for: $0) as? WrapperAnnotationView {
+                group.activate()
+            }
+        }
+    }
+    
     /// Removes all annotations greater than 800m from the map center
     fileprivate func cullAnnotations() {
         let farAnnotations = exploreMap.annotations.filter {
             MKMapPoint($0.coordinate).distance(to: MKMapPoint(exploreMap.centerCoordinate)) > 800
         }
         exploreMap.removeAnnotations(farAnnotations)
+    }
+    
+    fileprivate func testAsyncDataUpdate(
+        for mapView: MKMapView,
+        withImageSource imageSource: ImageSource
+    ) {
+        guard lastAsyncUpdate.timeIntervalSinceNow < -0.1 else {return}
+        lastAsyncUpdate = Date()
+        imageSource.testPrivateRequest(inRegion: mapView.region) { data in
+            if let annotation = data.randomElement() {
+                print("Attempting addition")
+                mapView.addAnnotation(annotation)
+            }
+        }
     }
 }

@@ -22,6 +22,16 @@ public class ImageGroup: NSManagedObject {
         }
     }
     
+    func copyWithoutContext() -> ImageGroup {
+        let clone = NSManagedObject(entity: entity, insertInto: nil) as! ImageGroup
+        for child in images {
+            clone.addToImageSet(child.copyWithoutContext(withParent: clone))
+        }
+        clone.latitude = latitude
+        clone.longitude = longitude
+        return clone
+    }
+    
     var images: [HistoricalImage] {
         willAccessValue(forKey: "images")
         defer {didAccessValue(forKey: "images")}
