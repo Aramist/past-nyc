@@ -18,8 +18,12 @@ class ExploreMapViewController: UIViewController {
     var lastAsyncUpdate = Date().addingTimeInterval(-0.5)
     // The 5 (or fewer) annotations that have their image popup enabled
     var activeImageAnnotations: [ImageGroup] = []
-    // Same point in the middle of city hall used as a placeholder in the Nearby Images scene
+    // Same point in the middle of city hall used as a placeholder in the
+    // Nearby Images scene
     var userLocation = CLLocationCoordinate2D(latitude: 40.713147, longitude: -74.005961)
+    // Flag to ensure we don't interfere with the user's map exploration every time
+    // their location updates
+    var hasUpdatedToUserLocation = false
     
     deinit {
         exploreMap.delegate = nil
@@ -69,6 +73,7 @@ class ExploreMapViewController: UIViewController {
             latitudinalMeters: 400,
             longitudinalMeters: 400)
         exploreMap.setRegion(initialRegion, animated: true)
+        mapViewDidChangeVisibleRegion(exploreMap)
     }
 }
 
@@ -76,6 +81,9 @@ class ExploreMapViewController: UIViewController {
 // MARK: Location Delegate
 extension ExploreMapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard !hasUpdatedToUserLocation else { return }
+        hasUpdatedToUserLocation = true
+        
         if let userLocation = locations.first {
             self.userLocation = userLocation.coordinate
             centerMapAroundUser()
@@ -117,15 +125,13 @@ extension ExploreMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        guard let source = imageSource else {return}
-//        reloadAnnotations(from: source)
+        cullAnnotations()
     }
-    
     
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
         guard let source = imageSource else {return}
         attemptUpdateActivePopups(for: mapView)
-        testAsyncDataUpdate(for: mapView, withImageSource: source)
+        asyncLoadNewAnnotations(for: mapView, fromImageSource: source)
     }
     
     /// Taken from https://stackoverflow.com/questions/9270268/convert-mkcoordinateregion-to-mkmaprect
@@ -234,17 +240,24 @@ extension ExploreMapViewController: MKMapViewDelegate {
         exploreMap.removeAnnotations(farAnnotations)
     }
     
-    fileprivate func testAsyncDataUpdate(
+    fileprivate func asyncLoadNewAnnotations(
         for mapView: MKMapView,
-        withImageSource imageSource: ImageSource
+        fromImageSource imageSource: ImageSource
     ) {
         guard lastAsyncUpdate.timeIntervalSinceNow < -0.1 else {return}
         lastAsyncUpdate = Date()
-        imageSource.testPrivateRequest(inRegion: mapView.region) { data in
-            if let annotation = data.randomElement() {
-                print("Attempting addition")
-                mapView.addAnnotation(annotation)
-            }
+        
+        // This cast should never fail because of the filter condition
+        let priorAnnotations = exploreMap.annotations.filter( {$0 is ImageGroup} ) as! [ImageGroup]
+        let priorIDs = Set(priorAnnotations.map({ $0.uniqueID }))
+        
+        
+        imageSource.asyncNewImages(
+            inRegion: mapView.region,
+            withPriorImageIDs: priorIDs
+        ) { [weak mapView] update in
+            guard update.count > 0 else { return }
+            mapView?.addAnnotations(update)
         }
     }
 }

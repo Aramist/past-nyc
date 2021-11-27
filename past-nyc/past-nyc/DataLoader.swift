@@ -41,6 +41,9 @@ class DataLoader {
     
     fileprivate let jsonDataFileName = "local_image_dataset"
     let maxLoadedImageGroups = 80
+    // Max span for async annotation updates (performed every 0.1s)
+    let maxAsyncLatDelta = 6.0e-3,
+        maxAsyncLonDelta = 3.0e-3
     var context: NSManagedObjectContext
     var dataSuccessfullyLoaded = false
     
@@ -131,8 +134,9 @@ class DataLoader {
                 let jsonImageDataset = try JSONDecoder().decode([JSONHistoricalImageGroup].self, from: jsonData)
                 
                 var refs: [ImageGroup] = []
-                for jsonImageData in jsonImageDataset {
-                    let newGroup = ImageGroup(from: jsonImageData, withContext: privateContext)
+                
+                for (idx, jsonImageData) in jsonImageDataset.enumerated() {
+                    let newGroup = ImageGroup(from: jsonImageData, withContext: privateContext, withID: idx)
                     refs.append(newGroup)
                 }
                 try privateContext.save()
@@ -162,9 +166,12 @@ protocol ImageSource {
         inRegion region: MKCoordinateRegion,
         withPriorImages prior: [ImageGroup]
     ) -> [ImageGroup]
-    func testPrivateRequest(
+    
+    func asyncNewImages(
         inRegion region: MKCoordinateRegion,
-        completion: ((_ data: [ImageGroup]) -> ())? )
+        withPriorImageIDs priorIDs: Set<Int32>,
+        completion: ((_ data: [ImageGroup]) -> ())?
+    )
 }
 
 
@@ -209,12 +216,13 @@ extension DataLoader: ImageSource {
         return newImages
     }
     
-    func testPrivateRequest(
+    func asyncNewImages(
         inRegion region: MKCoordinateRegion,
-        completion: ((_ data: [ImageGroup]) -> ())?
+        withPriorImageIDs priorIDs: Set<Int32>,
+        completion: ((_ update: [ImageGroup]) -> ())?
     ) {
-        let latDelta = region.span.latitudeDelta / 2,
-            lonDelta = region.span.longitudeDelta / 2
+        let latDelta = min(region.span.latitudeDelta, maxAsyncLatDelta) / 2,
+            lonDelta = min(region.span.longitudeDelta, maxAsyncLonDelta) / 2
         let coordRange = [
             CLLocationCoordinate2D(latitude: region.center.latitude - latDelta, longitude: region.center.longitude - lonDelta),
             CLLocationCoordinate2D(latitude: region.center.latitude + latDelta, longitude: region.center.longitude + lonDelta)
@@ -224,14 +232,20 @@ extension DataLoader: ImageSource {
         privateContext.perform {
             let startTime = Date()
             let data = try? self.fetchImages(inRange: coordRange, withContext: privateContext)
-            let copy = data?.map {
+            guard let data = data else {
+                DispatchQueue.main.async { completion?([]) }
+                return
+            }
+            
+            let copy = data.filter {
+                !priorIDs.contains($0.uniqueID)
+            }.map {
                 $0.copyWithoutContext()
             }
             print("Async request time: \(-startTime.timeIntervalSinceNow)")
             DispatchQueue.main.async {
-                completion?(copy ?? [])
+                completion?(copy)
             }
         }
-        
     }
 }

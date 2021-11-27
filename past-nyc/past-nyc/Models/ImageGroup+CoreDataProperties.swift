@@ -2,7 +2,7 @@
 //  ImageGroup+CoreDataProperties.swift
 //  past-nyc
 //
-//  Created by Aramis on 11/25/21.
+//  Created by Aramis on 11/27/21.
 //
 //
 
@@ -18,6 +18,7 @@ extension ImageGroup {
 
     @NSManaged public var latitude: Float
     @NSManaged public var longitude: Float
+    @NSManaged public var uniqueID: Int32
     @NSManaged public var imageSet: NSSet?
 
 }

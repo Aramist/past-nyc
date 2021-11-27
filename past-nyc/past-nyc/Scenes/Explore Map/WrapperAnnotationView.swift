@@ -35,6 +35,7 @@ class WrapperAnnotationView: MKAnnotationView {
     // MARK: Inherited methods
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        isHidden = true
         arrangeSubview()
     }
     
@@ -54,11 +55,13 @@ class WrapperAnnotationView: MKAnnotationView {
         super.prepareForReuse()
         childAnnotationView?.prepareForReuse()
         centerOffset = CGPoint.zero
+        isHidden = true
     }
     
     // MARK: Non-inherited methods
     func updateOffset() {
         centerOffset = CGPoint(x: bounds.width / 2, y: -bounds.height / 2)
+        isHidden = false
     }
 
     func activate() {

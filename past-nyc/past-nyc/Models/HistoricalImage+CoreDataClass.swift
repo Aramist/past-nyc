@@ -31,6 +31,11 @@ public class HistoricalImage: NSManagedObject {
         parentGroup = parent
     }
     
+    
+    /// Deep copies the image while divorcing it from its parent context
+    /// This allows the managed object to travel between threads
+    /// - Parameter parent: Parent (cloned) image group. provided to maintain relationship
+    /// - Returns: A thread-safe deep copy of self
     func copyWithoutContext(withParent parent: ImageGroup) -> HistoricalImage {
         let clone = NSManagedObject(entity: entity, insertInto: nil) as! HistoricalImage
         clone.thumbnailURL = thumbnailURL

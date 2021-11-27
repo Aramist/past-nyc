@@ -11,10 +11,11 @@ import MapKit
 
 
 public class ImageGroup: NSManagedObject {
-    convenience init(from jsonObject: DataLoader.JSONHistoricalImageGroup, withContext context: NSManagedObjectContext){
+    convenience init(from jsonObject: DataLoader.JSONHistoricalImageGroup, withContext context: NSManagedObjectContext, withID uniqueID: Int){
         self.init(context: context)
         self.latitude = jsonObject.latitude
         self.longitude = jsonObject.longitude
+        self.uniqueID = Int32(uniqueID)
         
         jsonObject.photos.forEach { jsonPhoto in
             let image = HistoricalImage(from: jsonPhoto, withParent: self, withContext: context)
@@ -29,6 +30,7 @@ public class ImageGroup: NSManagedObject {
         }
         clone.latitude = latitude
         clone.longitude = longitude
+        clone.uniqueID = uniqueID
         return clone
     }
     
