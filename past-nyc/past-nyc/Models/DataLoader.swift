@@ -22,6 +22,7 @@ class DataLoader {
     struct JSONHistoricalImageGroup: Codable {
         var latitude: Float
         var longitude: Float
+        var borough_code: Int
         var photos: [JSONHistoricalImage]
     }
     
@@ -34,6 +35,22 @@ class DataLoader {
         var id: String // The id of the image in the NYPL database
         var height: Int
         var width: Int
+    }
+    
+    
+    enum Borough: Int, Codable {
+        fileprivate static let boroughNames = ["Manhattan", "Bronx", "Brooklyn", "Staten Island", "Queens", "No Borough"]
+        
+        case Manhattan      = 0
+        case Bronx          = 1
+        case Brooklyn       = 2
+        case StatenIsland   = 3
+        case Queens         = 4
+        case None           = 5
+        
+        func toString() -> String {
+            DataLoader.Borough.boroughNames[self.rawValue]
+        }
     }
     
     // Singleton instance

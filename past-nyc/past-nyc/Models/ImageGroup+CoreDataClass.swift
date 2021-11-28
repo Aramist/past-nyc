@@ -15,6 +15,7 @@ public class ImageGroup: NSManagedObject {
         self.init(context: context)
         self.latitude = jsonObject.latitude
         self.longitude = jsonObject.longitude
+        self.boroughCode = Int16(jsonObject.borough_code)
         self.uniqueID = Int32(uniqueID)
         
         jsonObject.photos.forEach { jsonPhoto in
@@ -30,8 +31,13 @@ public class ImageGroup: NSManagedObject {
         }
         clone.latitude = latitude
         clone.longitude = longitude
+        clone.boroughCode = boroughCode
         clone.uniqueID = uniqueID
         return clone
+    }
+    
+    var borough: DataLoader.Borough {
+        DataLoader.Borough(rawValue: Int(boroughCode)) ?? .None
     }
     
     var images: [HistoricalImage] {

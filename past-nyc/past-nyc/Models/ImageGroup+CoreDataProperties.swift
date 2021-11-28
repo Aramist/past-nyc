@@ -19,6 +19,7 @@ extension ImageGroup {
     @NSManaged public var latitude: Float
     @NSManaged public var longitude: Float
     @NSManaged public var uniqueID: Int32
+    @NSManaged public var boroughCode: Int16
     @NSManaged public var imageSet: NSSet?
 
 }

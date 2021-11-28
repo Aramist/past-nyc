@@ -11,7 +11,8 @@
         <attribute name="thumbnailURL" optional="YES" attributeType="String"/>
         <relationship name="parentGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ImageGroup" inverseName="imageSet" inverseEntity="ImageGroup"/>
     </entity>
-    <entity name="ImageGroup" representedClassName=".ImageGroup" versionHashModifier="2" syncable="YES">
+    <entity name="ImageGroup" representedClassName=".ImageGroup" versionHashModifier="3" syncable="YES">
+        <attribute name="boroughCode" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="uniqueID" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" versionHashModifier="1"/>
@@ -23,6 +24,6 @@
     </entity>
     <elements>
         <element name="HistoricalImage" positionX="-54" positionY="9" width="128" height="164"/>
-        <element name="ImageGroup" positionX="-63" positionY="-18" width="128" height="89"/>
+        <element name="ImageGroup" positionX="-63" positionY="-18" width="128" height="104"/>
     </elements>
 </model>
