@@ -13,33 +13,27 @@ class NearbyImagesViewController: UIViewController {
     
     @IBOutlet weak var imageGroupTable: UITableView!
     
-    var nearbyImages: [ImageGroup]?
-    var imageSource: ImageSource?
-    // Provide a defualt location in the middle of downtown
-    var currentLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 40.713147, longitude: -74.005961)
+    fileprivate var nearbyImages: [ImageGroup]?
+    fileprivate var imageSource: ImageSource?
+    fileprivate let locationManager = LocationManager.sharedInstance
     
-    var searchRadius: Double = 1000.0
+    let searchRadius: Double = 1000.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageSource = DataLoader.main
+        imageSource = DataLoader.sharedInstance
         
-        // Setup location manager to get current location
-        let locationManager = CLLocationManager()
-        locationManager.delegate = self
-        // TODO: Is it worth supporting iOS 13
-        if #available(iOS 14.0, *) {
-            if locationManager.authorizationStatus == .notDetermined {
-                locationManager.requestWhenInUseAuthorization()
-            }
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-        locationManager.requestLocation()
-        
+        imageGroupTable.delegate = self
+        imageGroupTable.dataSource = self
         // TODO: Implement some kind of animation for notifying the user that we are
         // waiting for the device to get their location
         loadTableData()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(loadTableData),
+            name: nil,
+            object: locationManager)
     }
     
     func configureAppearance() {
@@ -49,7 +43,6 @@ class NearbyImagesViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.honeydew]
         navigationController?.navigationBar.backgroundColor = .imperialRed
     }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let detail = segue.destination as? ImageDetailViewController,
@@ -61,7 +54,7 @@ class NearbyImagesViewController: UIViewController {
     }
     
     
-    func loadTableData() {
+    @objc func loadTableData() {
         // The plan is for this class to act as a delegate/datasource for the table
         // And for each cell (row) in the table to act as a delegate/datasource for its
         // child collection view
@@ -73,14 +66,14 @@ class NearbyImagesViewController: UIViewController {
         
         // The end result is several rows of individually (horizontally) scrollable
         // content, similar to the Spotify home page
-        
-        let searchRegion = regionFromCoordinate(currentLocation, withRadius: 800)
+
+        let currentLocation = locationManager.userLocation ?? locationManager.defaultLocation
+        let searchRegion = regionFromCoordinate(currentLocation, withRadius: searchRadius)
         let userMapPoint = MKMapPoint(currentLocation)
         nearbyImages = imageSource?.getImages(inRegion: searchRegion).sorted {
             MKMapPoint($0.coordinate).distance(to: userMapPoint) < MKMapPoint($1.coordinate).distance(to: userMapPoint)
         }
-        imageGroupTable.delegate = self
-        imageGroupTable.dataSource = self
+        
         imageGroupTable.reloadData()
     }
     
@@ -89,20 +82,6 @@ class NearbyImagesViewController: UIViewController {
         MKCoordinateRegion(center: coordinate, latitudinalMeters: radius, longitudinalMeters: radius)
     }
 
-}
-
-// MARK: Location Delegate
-extension NearbyImagesViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let userLocation = locations.first {
-            currentLocation = userLocation.coordinate
-            loadTableData()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location manager failed: \(error)")
-    }
 }
 
 // MARK: Table View Extns.

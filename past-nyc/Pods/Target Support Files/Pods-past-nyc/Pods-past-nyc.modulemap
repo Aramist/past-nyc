@@ -1,0 +1,6 @@
+framework module Pods_past_nyc {
+  umbrella header "Pods-past-nyc-umbrella.h"
+
+  export *
+  module * { export * }
+}

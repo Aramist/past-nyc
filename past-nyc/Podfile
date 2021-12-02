@@ -6,5 +6,8 @@ target 'past-nyc' do
   use_frameworks!
 
   # Pods for past-nyc
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'GeoFire/Utils'
 
 end

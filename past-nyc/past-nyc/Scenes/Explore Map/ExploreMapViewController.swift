@@ -18,12 +18,7 @@ class ExploreMapViewController: UIViewController {
     var lastAsyncUpdate = Date().addingTimeInterval(-0.5)
     // The 5 (or fewer) annotations that have their image popup enabled
     var activeImageAnnotations: [ImageGroup] = []
-    // Same point in the middle of city hall used as a placeholder in the
-    // Nearby Images scene
-    var userLocation = CLLocationCoordinate2D(latitude: 40.713147, longitude: -74.005961)
-    // Flag to ensure we don't interfere with the user's map exploration every time
-    // their location updates
-    var hasUpdatedToUserLocation = false
+    fileprivate let locationManager = LocationManager.sharedInstance
     // Flag to avoid mapViewDidChangeVisibleRegion updates while the map is loading
     var mapIsLoaded = false
     // Coordinates for NYC's bounding box
@@ -41,7 +36,7 @@ class ExploreMapViewController: UIViewController {
         super.viewDidLoad()
         configureAppearance()
 
-        imageSource = DataLoader.main
+        imageSource = DataLoader.sharedInstance
         exploreMap.delegate = self
         
         assignBoundingBox(to: exploreMap)
@@ -51,25 +46,16 @@ class ExploreMapViewController: UIViewController {
             WrapperAnnotationView.self,
             forAnnotationViewWithReuseIdentifier: WrapperAnnotationView.reuseID)
         
-        // Setup location manager to get current location
-        // Copied from NearbyImagesViewController.swift. Consider editing that
-        // too if this ever gets modified
-        let locationManager = CLLocationManager()
-        locationManager.delegate = self
-        // TODO: Is it worth supporting iOS 13
-        if #available(iOS 14.0, *) {
-            if locationManager.authorizationStatus == .notDetermined {
-                locationManager.requestWhenInUseAuthorization()
-            }
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-        locationManager.requestLocation()
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveLocationNotification), name: nil, object: locationManager)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         mapViewDidChangeVisibleRegion(exploreMap)
+    }
+    
+    @objc func didReceiveLocationNotification() {
+        centerMapAroundUser()
     }
     
     fileprivate func configureAppearance() {
@@ -79,7 +65,7 @@ class ExploreMapViewController: UIViewController {
     
     fileprivate func centerMapAroundUser() {
         let initialRegion = MKCoordinateRegion(
-            center: userLocation,
+            center: locationManager.userLocation ?? locationManager.defaultLocation,
             latitudinalMeters: 400,
             longitudinalMeters: 400)
         exploreMap.setRegion(initialRegion, animated: true)
@@ -104,25 +90,6 @@ class ExploreMapViewController: UIViewController {
             animated: false)
     }
 }
-
-
-// MARK: Location Delegate
-extension ExploreMapViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !hasUpdatedToUserLocation else { return }
-        hasUpdatedToUserLocation = true
-        
-        if let userLocation = locations.first {
-            self.userLocation = userLocation.coordinate
-            centerMapAroundUser()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location manager failed: \(error)")
-    }
-}
-
 
 // MARK: MapView Delegate
 extension ExploreMapViewController: MKMapViewDelegate {
