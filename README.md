@@ -28,13 +28,13 @@ This app will use your GPS location and show you how the area you're in looked l
 
 **Required Must-have Stories**
 
-* User can view their location on a Map
-* User can view pictures taken nearest to their location
+- [x] User can view their location on a Map
+- [x] User can view pictures taken nearest to their location
 
 **Optional Nice-to-have Stories**
 
-* User can register for an account
-* User can have a favorites section
+- [ ] User can register for an account
+- [ ] User can have a favorites section
 
 ### 2. Screen Archetypes
 
