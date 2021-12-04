@@ -40,12 +40,14 @@ This app will use your GPS location and show you how the area you're in looked l
 
 * Map View Screen
    * Allows user to view their current location on a map
-   * Has a "show nearest picture" option
+   * User can explore the entire city and the images within:
+   * <img src="https://github.com/ABKK-CodePath/demo-day/blob/main/docs/explore_scene_demo.gif" width="320"/>
 
 * Nearest Picture Screen
    * Shows user the picture of the nearest intersection.
    * Allows user to go back and forth with the next closest picture
    * Shows crossroad names.
+   * <img src="https://github.com/ABKK-CodePath/demo-day/blob/main/docs/nearby_scene_demo.gif" width="320"/>
 
 ### 3. Navigation
 
