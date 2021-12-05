@@ -42,7 +42,7 @@ public class HistoricalImage: NSManagedObject {
         clone.fullsizeURL = fullsizeURL
         clone.intersection = intersection
         clone.nyplID = nyplID
-        clone.photoDescription = nil
+        clone.photoDescription = photoDescription
         clone.imageWidth = imageWidth
         clone.imageHeight = imageHeight
         clone.parentGroup = parent

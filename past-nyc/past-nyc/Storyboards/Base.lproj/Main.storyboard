@@ -253,7 +253,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5Ez-8z-2ZE">
-                                                <rect key="frame" x="15" y="8" width="384" height="384"/>
+                                                <rect key="frame" x="15" y="170" width="384" height="384"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="5Ez-8z-2ZE" secondAttribute="height" multiplier="1:1" placeholder="YES" id="52Q-xp-1RI"/>
                                                 </constraints>
@@ -305,7 +305,7 @@
                         <outlet property="dateLabel" destination="r5y-RY-Aej" id="TvU-lw-Wwz"/>
                         <outlet property="fullImage" destination="5Ez-8z-2ZE" id="Phf-Ji-WMZ"/>
                         <outlet property="imageDescriptionLabel" destination="fHn-tS-Ooi" id="vnK-PR-2IA"/>
-                        <outlet property="scrollView" destination="r7y-pq-UWd" id="DbP-Na-fxQ"/>
+                        <outlet property="parentScrollView" destination="r7y-pq-UWd" id="DbP-Na-fxQ"/>
                         <outlet property="stackView" destination="E4V-9C-NAR" id="0B5-7p-uKA"/>
                     </connections>
                 </viewController>
