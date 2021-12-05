@@ -67,7 +67,7 @@ class PopupImageAnnotationView: UIView {
         super.draw(rect)
     }
     
-    func prepareForDisplay(withAnnotation annotation: ImageGroup) {
+    func prepareForDisplay(withData annotation: ImageGroup) {
         samplePreviewImage(from: annotation)
         resize()
         showImage()
@@ -79,7 +79,6 @@ class PopupImageAnnotationView: UIView {
         
         if let aspectRatioConstraint = aspectRatioConstraint {
             aspectRatioConstraint.isActive = false
-            removeConstraint(aspectRatioConstraint)
         }
         aspectRatioConstraint = nil
         historicalImage.image = nil
@@ -150,8 +149,7 @@ class PopupImageAnnotationView: UIView {
     /// When annotation is an ImageGroup, instantiates previewImage with a
     /// random HistoricalImage from the annotation's children
     /// - Parameter annotation: ImageGroup to sample from
-    fileprivate func samplePreviewImage(from annotation: MKAnnotation) {
-        guard let imageGroup = annotation as? ImageGroup else {return}
+    fileprivate func samplePreviewImage(from imageGroup: ImageGroup) {
         previewImage = imageGroup.sampleImage
         clusterSize = imageGroup.imageCount
     }
@@ -180,7 +178,6 @@ class PopupImageAnnotationView: UIView {
         let aspectRatio = (height + 2 * marginWidth) / (width + 2 * marginWidth)
         let aspectRatioConstraint = heightAnchor.constraint(equalTo: widthAnchor, multiplier: aspectRatio, constant: cornerPointHeight)
         self.aspectRatioConstraint = aspectRatioConstraint
-        self.addConstraint(aspectRatioConstraint)
         aspectRatioConstraint.isActive = true
         let newSize = CGSize(width: annotationWidth, height: annotationWidth * aspectRatio + cornerPointHeight)
         drawBackground(forSize: newSize)

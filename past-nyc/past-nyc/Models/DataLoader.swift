@@ -186,7 +186,7 @@ protocol ImageSource {
     
     func asyncNewImages(
         inRegion region: MKCoordinateRegion,
-        withPriorImageIDs priorIDs: Set<Int32>,
+        withPriorImageIDs priorIDs: Set<Int>,
         completion: ((_ data: [ImageGroup]) -> ())?
     )
 }
@@ -235,7 +235,7 @@ extension DataLoader: ImageSource {
     
     func asyncNewImages(
         inRegion region: MKCoordinateRegion,
-        withPriorImageIDs priorIDs: Set<Int32>,
+        withPriorImageIDs priorIDs: Set<Int>,
         completion: ((_ update: [ImageGroup]) -> ())?
     ) {
         let latDelta = min(region.span.latitudeDelta, maxAsyncLatDelta) / 2,
@@ -254,7 +254,7 @@ extension DataLoader: ImageSource {
             }
             
             let copy = data.filter {
-                !priorIDs.contains($0.uniqueID)
+                !priorIDs.contains($0.id)
             }.map {
                 $0.copyWithoutContext()
             }

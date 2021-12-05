@@ -45,14 +45,18 @@ class WrapperAnnotationView: MKAnnotationView {
     
     override func prepareForDisplay() {
         super.prepareForDisplay()
-        guard let annotation = annotation as? ImageGroup else {return}
-        childAnnotationView?.prepareForDisplay(withAnnotation: annotation)
+        guard let annotation = annotation as? ImageGroupAnnotation else { return }
+        annotation.delegate = self
+        guard let imageData = annotation.wrappedImage else { return }
+        childAnnotationView?.prepareForDisplay(withData: imageData)
         isEnabled = false
         centerOffset = CGPoint(x: bounds.width / 2, y: -bounds.height / 2)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        guard let annotation = annotation as? ImageGroupAnnotation else { return }
+        annotation.delegate = nil
         childAnnotationView?.prepareForReuse()
         centerOffset = CGPoint.zero
         isHidden = true
@@ -96,5 +100,22 @@ class WrapperAnnotationView: MKAnnotationView {
             child.widthAnchor.constraint(equalTo: widthAnchor),
             child.heightAnchor.constraint(equalTo: heightAnchor)
         ])
+    }
+}
+
+extension WrapperAnnotationView: ImageGroupAnnotationDelegate {
+    func annotation(dataWasReassignedTo data: ImageGroup) {
+        childAnnotationView?.prepareForReuse()
+        centerOffset = CGPoint.zero
+        isHidden = true
+        childAnnotationView?.prepareForDisplay(withData: data)
+        isEnabled = false
+        centerOffset = CGPoint(x: bounds.width / 2, y: -bounds.height / 2)
+    }
+    
+    func annotationDataWasRemoved() {
+        childAnnotationView?.prepareForReuse()
+        centerOffset = CGPoint.zero
+        isHidden = true
     }
 }

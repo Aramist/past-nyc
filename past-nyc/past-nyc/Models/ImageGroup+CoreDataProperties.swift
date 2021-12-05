@@ -42,5 +42,8 @@ extension ImageGroup {
 }
 
 extension ImageGroup : Identifiable {
-
+    public typealias ID = Int
+    public var id: ID {
+        Int(uniqueID)
+    }
 }

@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		801490162752B99D006F51EC /* ImageGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801490142752B99D006F51EC /* ImageGroup+CoreDataProperties.swift */; };
 		80292EE827513D0800CCA69E /* local_image_dataset.json in Resources */ = {isa = PBXBuildFile; fileRef = 80292EE727513D0800CCA69E /* local_image_dataset.json */; };
+		80B4CE88275BF31D00005024 /* ImageGroupAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B4CE87275BF31D00005024 /* ImageGroupAnnotation.swift */; };
+		80B4CE8A275BF90A00005024 /* ExploreMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B4CE89275BF90A00005024 /* ExploreMapViewDelegate.swift */; };
+		80B4CE8D275BF96000005024 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 80B4CE8C275BF96000005024 /* Collections */; };
+		80B4CE8F275BF96000005024 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 80B4CE8E275BF96000005024 /* DequeModule */; };
 		80C17044274F406E00397D63 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C17043274F406E00397D63 /* AppDelegate.swift */; };
 		80C17046274F406E00397D63 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C17045274F406E00397D63 /* SceneDelegate.swift */; };
 		80C1704B274F406E00397D63 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80C17049274F406E00397D63 /* Main.storyboard */; };
@@ -35,6 +39,8 @@
 /* Begin PBXFileReference section */
 		801490142752B99D006F51EC /* ImageGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		80292EE727513D0800CCA69E /* local_image_dataset.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = local_image_dataset.json; sourceTree = "<group>"; };
+		80B4CE87275BF31D00005024 /* ImageGroupAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGroupAnnotation.swift; sourceTree = "<group>"; };
+		80B4CE89275BF90A00005024 /* ExploreMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMapViewDelegate.swift; sourceTree = "<group>"; };
 		80C17040274F406E00397D63 /* past-nyc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "past-nyc.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		80C17043274F406E00397D63 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80C17045274F406E00397D63 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,7 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80B4CE8D275BF96000005024 /* Collections in Frameworks */,
 				80C1705C274F40F600397D63 /* MapKit.framework in Frameworks */,
+				80B4CE8F275BF96000005024 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +128,7 @@
 				80C1706E27500ECD00397D63 /* ImageGroup+CoreDataClass.swift */,
 				801490142752B99D006F51EC /* ImageGroup+CoreDataProperties.swift */,
 				80C1704C274F406E00397D63 /* past_nyc.xcdatamodeld */,
+				80B4CE87275BF31D00005024 /* ImageGroupAnnotation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -171,6 +180,7 @@
 				80C1707D27502D5C00397D63 /* WrapperAnnotationView.swift */,
 				80C1707F27502D7600397D63 /* ClusterDetailViewController.swift */,
 				80C1708627506CDD00397D63 /* MapClusterImageCollectionViewCell.swift */,
+				80B4CE89275BF90A00005024 /* ExploreMapViewDelegate.swift */,
 			);
 			path = "Explore Map";
 			sourceTree = "<group>";
@@ -199,6 +209,10 @@
 			dependencies = (
 			);
 			name = "past-nyc";
+			packageProductDependencies = (
+				80B4CE8C275BF96000005024 /* Collections */,
+				80B4CE8E275BF96000005024 /* DequeModule */,
+			);
 			productName = "past-nyc";
 			productReference = 80C17040274F406E00397D63 /* past-nyc.app */;
 			productType = "com.apple.product-type.application";
@@ -227,6 +241,9 @@
 				Base,
 			);
 			mainGroup = 80C17037274F406E00397D63;
+			packageReferences = (
+				80B4CE8B275BF96000005024 /* XCRemoteSwiftPackageReference "swift-collections" */,
+			);
 			productRefGroup = 80C17041274F406E00397D63 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -262,12 +279,14 @@
 				80C17063274FFA6C00397D63 /* DataLoader.swift in Sources */,
 				801490162752B99D006F51EC /* ImageGroup+CoreDataProperties.swift in Sources */,
 				80C1708727506CDD00397D63 /* MapClusterImageCollectionViewCell.swift in Sources */,
+				80B4CE88275BF31D00005024 /* ImageGroupAnnotation.swift in Sources */,
 				80C17044274F406E00397D63 /* AppDelegate.swift in Sources */,
 				80C1707E27502D5C00397D63 /* WrapperAnnotationView.swift in Sources */,
 				80C1704E274F406E00397D63 /* past_nyc.xcdatamodeld in Sources */,
 				80C17069275003D000397D63 /* ImageGroupTableViewCell.swift in Sources */,
 				80C1707127500ECD00397D63 /* HistoricalImage+CoreDataProperties.swift in Sources */,
 				80C17067275003AD00397D63 /* NearbyImagesViewController.swift in Sources */,
+				80B4CE8A275BF90A00005024 /* ExploreMapViewDelegate.swift in Sources */,
 				80C1707227500ECD00397D63 /* ImageGroup+CoreDataClass.swift in Sources */,
 				80C1707A27502D3100397D63 /* ExploreMapViewController.swift in Sources */,
 				80C17046274F406E00397D63 /* SceneDelegate.swift in Sources */,
@@ -498,6 +517,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		80B4CE8B275BF96000005024 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		80B4CE8C275BF96000005024 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80B4CE8B275BF96000005024 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		80B4CE8E275BF96000005024 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80B4CE8B275BF96000005024 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		80C1704C274F406E00397D63 /* past_nyc.xcdatamodeld */ = {

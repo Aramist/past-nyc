@@ -71,17 +71,9 @@ public class ImageGroup: NSManagedObject {
     var imageCount: Int {
         imageSet?.count ?? 0
     }
+    
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: Double(latitude), longitude: Double(longitude))
+    }
 
-}
-
-extension ImageGroup: MKAnnotation {
-    public var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2DMake(Double(latitude), Double(longitude))
-    }
-    public var title: String? {
-        nil
-    }
-    public var subtitle: String? {
-        nil
-    }
 }
