@@ -92,3 +92,9 @@ iOSInjectionProject/
 
 GoogleService-Info.plist
 
+backend-scripts/json/*
+backend-scripts/minijson/*
+
+.DS_STORE
+*.pyc
+__pycache__/
