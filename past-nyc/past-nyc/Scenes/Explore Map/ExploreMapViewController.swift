@@ -9,7 +9,7 @@ import CoreLocation
 import MapKit
 
 class ExploreMapViewController: UIViewController {
-
+    
     @IBOutlet weak var exploreMap: MKMapView!
     var imageSource: ImageSource?
     
@@ -18,12 +18,7 @@ class ExploreMapViewController: UIViewController {
     var lastAsyncUpdate = Date().addingTimeInterval(-0.5)
     // The 5 (or fewer) annotations that have their image popup enabled
     var activeImageAnnotations: [ImageGroup] = []
-    // Same point in the middle of city hall used as a placeholder in the
-    // Nearby Images scene
-    var userLocation = CLLocationCoordinate2D(latitude: 40.713147, longitude: -74.005961)
-    // Flag to ensure we don't interfere with the user's map exploration every time
-    // their location updates
-    var hasUpdatedToUserLocation = false
+    fileprivate let locationManager = LocationManager.sharedInstance
     // Flag to avoid mapViewDidChangeVisibleRegion updates while the map is loading
     var mapIsLoaded = false
     // Coordinates for NYC's bounding box
@@ -40,7 +35,7 @@ class ExploreMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureAppearance()
-
+        
         imageSource = DataLoader.main
         exploreMap.delegate = self
         
@@ -52,24 +47,20 @@ class ExploreMapViewController: UIViewController {
             forAnnotationViewWithReuseIdentifier: WrapperAnnotationView.reuseID)
         
         // Setup location manager to get current location
-        // Copied from NearbyImagesViewController.swift. Consider editing that
-        // too if this ever gets modified
-        let locationManager = CLLocationManager()
-        locationManager.delegate = self
-        // TODO: Is it worth supporting iOS 13
-        if #available(iOS 14.0, *) {
-            if locationManager.authorizationStatus == .notDetermined {
-                locationManager.requestWhenInUseAuthorization()
-            }
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-        locationManager.requestLocation()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceiveLocationNotification(_:)),
+            name: .didReceiveUserLocation,
+            object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         mapViewDidChangeVisibleRegion(exploreMap)
+    }
+    
+    @objc func didReceiveLocationNotification(_ sender: Notification) {
+        centerMapAroundUser()
     }
     
     fileprivate func configureAppearance() {
@@ -79,7 +70,7 @@ class ExploreMapViewController: UIViewController {
     
     fileprivate func centerMapAroundUser() {
         let initialRegion = MKCoordinateRegion(
-            center: userLocation,
+            center: locationManager.userLocation ?? locationManager.defaultLocation,
             latitudinalMeters: 400,
             longitudinalMeters: 400)
         exploreMap.setRegion(initialRegion, animated: true)
@@ -104,25 +95,6 @@ class ExploreMapViewController: UIViewController {
             animated: false)
     }
 }
-
-
-// MARK: Location Delegate
-extension ExploreMapViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !hasUpdatedToUserLocation else { return }
-        hasUpdatedToUserLocation = true
-        
-        if let userLocation = locations.first {
-            self.userLocation = userLocation.coordinate
-            centerMapAroundUser()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location manager failed: \(error)")
-    }
-}
-
 
 // MARK: MapView Delegate
 extension ExploreMapViewController: MKMapViewDelegate {
@@ -176,7 +148,7 @@ extension ExploreMapViewController: MKMapViewDelegate {
     func MKMapRectForCoordinateRegion(region:MKCoordinateRegion) -> MKMapRect {
         let topLeft = CLLocationCoordinate2D(latitude: region.center.latitude + (region.span.latitudeDelta/2), longitude: region.center.longitude - (region.span.longitudeDelta/2))
         let bottomRight = CLLocationCoordinate2D(latitude: region.center.latitude - (region.span.latitudeDelta/2), longitude: region.center.longitude + (region.span.longitudeDelta/2))
-
+        
         let a = MKMapPoint(topLeft)
         let b = MKMapPoint(bottomRight)
         
@@ -210,7 +182,7 @@ extension ExploreMapViewController: MKMapViewDelegate {
     /// Given two arrays of image groups, determines which were added and removed from the
     /// first to yield the second
     func annotationDifference(betweenPriorAnnotations prior: [ImageGroup], postAnnotations post: [ImageGroup]) -> (addedAnnotations: [ImageGroup], removedAnnotations: [ImageGroup]) {
-   
+        
         
         let priorIdHashes = prior.map {
             $0.objectID.hashValue
@@ -252,7 +224,7 @@ extension ExploreMapViewController: MKMapViewDelegate {
         let onScreenAnnotations = mapView.annotations(in: MKMapRectForCoordinateRegion(region: mapView.region))
         let closest = nearestImageGroups(fromSet: onScreenAnnotations, toPoint: mapView.centerCoordinate, limit: 5)
         let diff = annotationDifference(betweenPriorAnnotations: activeImageAnnotations, postAnnotations: closest)
-
+        
         activeImageAnnotations.removeAll {
             diff.removedAnnotations.contains($0)
         }
