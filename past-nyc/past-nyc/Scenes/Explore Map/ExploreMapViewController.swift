@@ -64,9 +64,23 @@ class ExploreMapViewController: UIViewController {
     @objc func didReceiveLocationNotification(_ sender: Notification) {
         centerMapAroundUser()
         // Allow these functions to run immediately
-        lastVicinityCheckTime = Date().addingTimeInterval(-100)
-        lastAsyncUpdate = Date().addingTimeInterval(-100)
-        lastVisibleAnnotationsUpdate = Date().addingTimeInterval(-100)
+        // The entire block is scheduled 500ms in the future to allow
+        // the map time to animate to the user's position
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now().advanced(by: .milliseconds(500))) { [weak self] in
+            guard let self = self else { return }
+            guard let imageSource = self.imageSource else { return }
+            self.lastAsyncUpdate = Date().addingTimeInterval(-10)
+            // Not using a weak self ref here because the exploreMap reference is already strong
+            self.asyncLoadNewAnnotations(for: self.exploreMap, fromImageSource: imageSource) {
+                // showNearbyAnnotations has to be delayed again because mapView needs time
+                // to add the annotations apparently
+                DispatchQueue.main.asyncAfter(
+                    deadline: DispatchTime.now().advanced(by: .milliseconds(100))) {
+                        self.lastVisibleAnnotationsUpdate = Date().addingTimeInterval(-10)
+                        self.showNearbyAnnotations(in: self.exploreMap)
+                    }
+            }
+        }
     }
     
     fileprivate func configureAppearance() {
@@ -147,7 +161,7 @@ extension ExploreMapViewController: MKMapViewDelegate {
         else {return}
         
         attemptUpdateActivePopups(for: mapView)
-        asyncLoadNewAnnotations(for: mapView, fromImageSource: source)
+        asyncLoadNewAnnotations(for: mapView, fromImageSource: source, completion: nil)
         showNearbyAnnotations(in: mapView)
     }
     
@@ -284,7 +298,8 @@ extension ExploreMapViewController: MKMapViewDelegate {
     
     fileprivate func asyncLoadNewAnnotations(
         for mapView: MKMapView,
-        fromImageSource imageSource: ImageSource
+        fromImageSource imageSource: ImageSource,
+        completion: (() -> ())?
     ) {
         guard lastAsyncUpdate.timeIntervalSinceNow < -3,
               mapIsLoaded
@@ -308,6 +323,8 @@ extension ExploreMapViewController: MKMapViewDelegate {
         ) { [weak mapView] update in
             guard update.count > 0 else { return }
             mapView?.addAnnotations(update)
+            print(mapView?.annotations.count)
+            completion?()
         }
     }
 }
