@@ -1,7 +1,4 @@
-Original App Design Project - README Template
-===
-
-# PAST NYC (tbd)
+# PAST NYC
 
 ## Table of Contents
 1. [Overview](#Overview)
@@ -14,7 +11,6 @@ Original App Design Project - README Template
 This app will use your GPS location and show you how the area you're in looked like in the early 1900s. 
 
 ### App Evaluation
-[Evaluation of your app across the following attributes]
 - **Category:** Education
 - **Mobile:** This app would most likely be mobile.
 - **Story:** Analyzes location data and retrieves the closest image from the early 1900s taken nearest to your location. (e.g if you're standing on Astor Pl. you'll see the crossroad of Lafayette St. and Astor Pl. or Broadway and 8th St.)
@@ -24,15 +20,10 @@ This app will use your GPS location and show you how the area you're in looked l
 
 ## Product Spec
 
-### 1. User Stories (Required and Optional)
-
-**Required Must-have Stories**
+### 1. User Stories
 
 - [x] User can view their location on a Map
 - [x] User can view pictures taken nearest to their location
-
-**Optional Nice-to-have Stories**
-
 - [ ] User can register for an account
 - [ ] User can have a favorites section
 
@@ -65,16 +56,8 @@ Optional:
 * Show Near me -> Shows pictures taken closest to user
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
-<img src="https://imgur.com/a/ryN75f0" width=600>
-Link: https://imgur.com/a/ryN75f0
+<img src="https://i.imgur.com/HOhAjaI.jpeg" width=600>
 
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
-
-## Schema 
-[This section will be completed in Unit 9]
 ### Models
 Historical Image model:
 | Property     | Type   | Description                                                         |
