@@ -218,7 +218,7 @@ extension ExploreMapViewController: MKMapViewDelegate {
     
     /// Activates the five nearest annotations and ensures the others are deactivated
     fileprivate func attemptUpdateActivePopups(for mapView: MKMapView) {
-        guard lastVicinityCheckTime.timeIntervalSinceNow < -0.2 else {return}
+        guard lastVicinityCheckTime.timeIntervalSinceNow < -0.08 else {return}
         lastVicinityCheckTime = Date()
         
         let onScreenAnnotations = mapView.annotations(in: MKMapRectForCoordinateRegion(region: mapView.region))
