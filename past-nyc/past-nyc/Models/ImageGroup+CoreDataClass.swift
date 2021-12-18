@@ -10,7 +10,15 @@ import CoreData
 import MapKit
 
 
-public class ImageGroup: NSManagedObject {
+public class ImageGroup: NSManagedObject, MKAnnotation {
+    
+    // Not sure if this calculated property actually qualifies as KVO compliant
+    @objc dynamic public var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: Double(latitude), longitude: Double(longitude))
+    }
+    @objc dynamic public var title: String? = nil
+    @objc dynamic public var subtitle: String? = nil
+    
     convenience init(from jsonObject: DataLoader.JSONHistoricalImageGroup, withContext context: NSManagedObjectContext, withID uniqueID: Int){
         self.init(context: context)
         self.latitude = jsonObject.latitude
@@ -72,16 +80,4 @@ public class ImageGroup: NSManagedObject {
         imageSet?.count ?? 0
     }
 
-}
-
-extension ImageGroup: MKAnnotation {
-    public var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2DMake(Double(latitude), Double(longitude))
-    }
-    public var title: String? {
-        nil
-    }
-    public var subtitle: String? {
-        nil
-    }
 }
