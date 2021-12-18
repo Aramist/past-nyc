@@ -57,7 +57,7 @@ class DataLoader {
     static let main: DataLoader? = DataLoader()
     
     fileprivate let jsonDataFileName = "local_image_dataset"
-    let maxLoadedImageGroups = 80
+    let maxLoadedImageGroups = 400
     // Max span for async annotation updates (performed every 0.1s)
     let maxAsyncLatDelta = 6.0e-3,
         maxAsyncLonDelta = 3.0e-3
@@ -238,8 +238,10 @@ extension DataLoader: ImageSource {
         withPriorImageIDs priorIDs: Set<Int32>,
         completion: ((_ update: [ImageGroup]) -> ())?
     ) {
-        let latDelta = min(region.span.latitudeDelta, maxAsyncLatDelta) / 2,
-            lonDelta = min(region.span.longitudeDelta, maxAsyncLonDelta) / 2
+//        let latDelta = min(region.span.latitudeDelta, maxAsyncLatDelta) / 2,
+//            lonDelta = min(region.span.longitudeDelta, maxAsyncLonDelta) / 2
+        let latDelta = region.span.latitudeDelta / 2,
+            lonDelta = region.span.longitudeDelta / 2
         let coordRange = [
             CLLocationCoordinate2D(latitude: region.center.latitude - latDelta, longitude: region.center.longitude - lonDelta),
             CLLocationCoordinate2D(latitude: region.center.latitude + latDelta, longitude: region.center.longitude + lonDelta)
@@ -247,6 +249,7 @@ extension DataLoader: ImageSource {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         privateContext.parent = context
         privateContext.perform {
+            let startDate = Date()
             let data = try? self.fetchImages(inRange: coordRange, withContext: privateContext)
             guard let data = data else {
                 DispatchQueue.main.async { completion?([]) }
@@ -261,6 +264,7 @@ extension DataLoader: ImageSource {
             DispatchQueue.main.async {
                 completion?(copy)
             }
+            print("asyncNewImages: Data fetch time: \(-startDate.timeIntervalSinceNow)")
         }
     }
 }

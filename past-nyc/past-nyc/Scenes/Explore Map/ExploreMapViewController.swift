@@ -14,10 +14,12 @@ class ExploreMapViewController: UIViewController {
     var imageSource: ImageSource?
     
     // The last time we've looped through annotations to find the nearest 5
-    var lastVicinityCheckTime = Date().addingTimeInterval(-0.5)
-    var lastAsyncUpdate = Date().addingTimeInterval(-0.5)
+    var lastVicinityCheckTime = Date().addingTimeInterval(-100)
+    var lastAsyncUpdate = Date().addingTimeInterval(-100)
+    var lastVisibleAnnotationsUpdate = Date().addingTimeInterval(-100)
     // The 5 (or fewer) annotations that have their image popup enabled
     var activeImageAnnotations: [ImageGroup] = []
+    var visibleAnnotations: Set<ImageGroup> = Set()
     fileprivate let locationManager = LocationManager.sharedInstance
     // Flag to avoid mapViewDidChangeVisibleRegion updates while the map is loading
     var mapIsLoaded = false
@@ -61,6 +63,24 @@ class ExploreMapViewController: UIViewController {
     
     @objc func didReceiveLocationNotification(_ sender: Notification) {
         centerMapAroundUser()
+        // Allow these functions to run immediately
+        // The entire block is scheduled 500ms in the future to allow
+        // the map time to animate to the user's position
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now().advanced(by: .milliseconds(500))) { [weak self] in
+            guard let self = self else { return }
+            guard let imageSource = self.imageSource else { return }
+            self.lastAsyncUpdate = Date().addingTimeInterval(-10)
+            // Not using a weak self ref here because the exploreMap reference is already strong
+            self.asyncLoadNewAnnotations(for: self.exploreMap, fromImageSource: imageSource) {
+                // showNearbyAnnotations has to be delayed again because mapView needs time
+                // to add the annotations apparently
+                DispatchQueue.main.asyncAfter(
+                    deadline: DispatchTime.now().advanced(by: .milliseconds(100))) {
+                        self.lastVisibleAnnotationsUpdate = Date().addingTimeInterval(-10)
+                        self.showNearbyAnnotations(in: self.exploreMap)
+                    }
+            }
+        }
     }
     
     fileprivate func configureAppearance() {
@@ -141,7 +161,8 @@ extension ExploreMapViewController: MKMapViewDelegate {
         else {return}
         
         attemptUpdateActivePopups(for: mapView)
-        asyncLoadNewAnnotations(for: mapView, fromImageSource: source)
+        asyncLoadNewAnnotations(for: mapView, fromImageSource: source, completion: nil)
+        showNearbyAnnotations(in: mapView)
     }
     
     /// Taken from https://stackoverflow.com/questions/9270268/convert-mkcoordinateregion-to-mkmaprect
@@ -201,24 +222,11 @@ extension ExploreMapViewController: MKMapViewDelegate {
         return (addedAnnotations: newImageGroups, removedAnnotations: removedImageGroups)
     }
     
-    /// Pushes new annotations to the map when the field of view shifts
-    fileprivate func reloadAnnotations(from source: ImageSource) {
-        guard let priorAnnotations = exploreMap.annotations.filter( {$0 is ImageGroup}) as? [ImageGroup]
-        else {
-            return // I don't believe this will ever be triggered
-        }
-        
-        let update = source.newImages(inRegion: exploreMap.region, withPriorImages: priorAnnotations)
-        exploreMap.addAnnotations(update)
-        
-        if exploreMap.annotations.count > source.loadedImageLimit {
-            cullAnnotations()
-        }
-    }
-    
     /// Activates the five nearest annotations and ensures the others are deactivated
     fileprivate func attemptUpdateActivePopups(for mapView: MKMapView) {
-        guard lastVicinityCheckTime.timeIntervalSinceNow < -0.08 else {return}
+        guard lastVicinityCheckTime.timeIntervalSinceNow < -0.08,
+              mapIsLoaded
+        else { return }
         lastVicinityCheckTime = Date()
         
         let onScreenAnnotations = mapView.annotations(in: MKMapRectForCoordinateRegion(region: mapView.region))
@@ -242,32 +250,81 @@ extension ExploreMapViewController: MKMapViewDelegate {
         }
     }
     
+    
+    /// Makes visible only the annotation within view
+    /// This is done to minimize calls to MKMapView.addAnnotation
+    /// The mapview will maintain many annotations, but most will have their views hidden
+    fileprivate func showNearbyAnnotations(in mapView: MKMapView) {
+        guard lastVisibleAnnotationsUpdate.timeIntervalSinceNow < 0.1,
+              mapIsLoaded
+        else { return }
+        lastVisibleAnnotationsUpdate = Date()
+        
+        let onScreen = mapView
+            .annotations(in: MKMapRectForCoordinateRegion(region: mapView.region))
+            .filter {
+                $0 is ImageGroup
+            } as? Set<ImageGroup>
+        guard let onScreen = onScreen else {
+            // This shouldn't ever be triggered
+            print("Failed to cast onScreen to Set<ImageGroup> in showNearbyAnnotations(in:)")
+            return
+        }
+        
+        let nearby = onScreen.filter {
+            MKMapPoint($0.coordinate).distance(to: MKMapPoint(mapView.region.center)) < 500
+        }
+        let offScreen = visibleAnnotations.subtracting(nearby)
+        
+        offScreen.forEach {
+            mapView.view(for: $0)?.isHidden = true
+        }
+        
+        nearby.forEach {
+            mapView.view(for: $0)?.isHidden = false
+        }
+        
+        visibleAnnotations = nearby
+    }
+    
     /// Removes all annotations greater than 800m from the map center
     fileprivate func cullAnnotations() {
         let farAnnotations = exploreMap.annotations.filter {
-            MKMapPoint($0.coordinate).distance(to: MKMapPoint(exploreMap.centerCoordinate)) > 800
+            $0 is ImageGroup &&
+            MKMapPoint($0.coordinate).distance(to: MKMapPoint(exploreMap.centerCoordinate)) > 3000
         }
         exploreMap.removeAnnotations(farAnnotations)
     }
     
     fileprivate func asyncLoadNewAnnotations(
         for mapView: MKMapView,
-        fromImageSource imageSource: ImageSource
+        fromImageSource imageSource: ImageSource,
+        completion: (() -> ())?
     ) {
-        guard lastAsyncUpdate.timeIntervalSinceNow < -0.1 else {return}
+        guard lastAsyncUpdate.timeIntervalSinceNow < -3,
+              mapIsLoaded
+        else { return }
         lastAsyncUpdate = Date()
         
         // This cast should never fail because of the filter condition
-        let priorAnnotations = exploreMap.annotations.filter( {$0 is ImageGroup} ) as! [ImageGroup]
+        let priorAnnotations = exploreMap.annotations.filter( {$0 is ImageGroup} ) as? [ImageGroup]
+        guard let priorAnnotations = priorAnnotations else {
+            fatalError("Failed to cast priorAnnotations to [ImageGroup] in asyncLoadNewAnnotations(for:fromImageSoruce:")
+        }
+        
         let priorIDs = Set(priorAnnotations.map({ $0.uniqueID }))
         
+        let regionCenter = mapView.region.center
+        let bigRegion = MKCoordinateRegion(center: regionCenter, latitudinalMeters: 2000, longitudinalMeters: 2000)
         
         imageSource.asyncNewImages(
-            inRegion: mapView.region,
+            inRegion: bigRegion,
             withPriorImageIDs: priorIDs
         ) { [weak mapView] update in
             guard update.count > 0 else { return }
             mapView?.addAnnotations(update)
+            print(mapView?.annotations.count)
+            completion?()
         }
     }
 }
