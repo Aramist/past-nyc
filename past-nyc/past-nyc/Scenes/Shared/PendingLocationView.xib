@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PendingLocationView" customModule="past_nyc" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="dUZ-bo-fim"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hgl-Rt-IzN">
+                    <rect key="frame" x="389" y="438" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="hgl-Rt-IzN" secondAttribute="height" multiplier="1:1" id="z7S-vb-Lp8"/>
+                    </constraints>
+                </activityIndicatorView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Determining Location..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fg-Rw-cdb">
+                    <rect key="frame" x="5" y="438" width="379" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="C1K-vh-4gR"/>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="0fg-Rw-cdb" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="4Fn-q7-SMK"/>
+                <constraint firstItem="hgl-Rt-IzN" firstAttribute="leading" secondItem="0fg-Rw-cdb" secondAttribute="trailing" constant="5" id="Mes-EV-e3I"/>
+                <constraint firstItem="hgl-Rt-IzN" firstAttribute="centerY" secondItem="0fg-Rw-cdb" secondAttribute="centerY" id="NmS-xL-POt"/>
+                <constraint firstItem="0fg-Rw-cdb" firstAttribute="leading" secondItem="C1K-vh-4gR" secondAttribute="leading" constant="5" id="Tc7-Ni-AXG"/>
+                <constraint firstItem="C1K-vh-4gR" firstAttribute="trailing" secondItem="hgl-Rt-IzN" secondAttribute="trailing" constant="5" id="dek-Z5-RoL"/>
+                <constraint firstItem="hgl-Rt-IzN" firstAttribute="height" secondItem="0fg-Rw-cdb" secondAttribute="height" id="r4v-3r-iGh"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-10" y="44"/>
+        </view>
+    </objects>
+</document>

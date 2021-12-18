@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Tlw-oD-ynL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Tlw-oD-ynL">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -21,6 +21,14 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" showsUserLocation="YES" showsCompass="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaw-Cq-5z0">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                             </mapView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ubf-tl-72a" customClass="PendingLocationView" customModule="past_nyc" customModuleProvider="target">
+                                <rect key="frame" x="10" y="98" width="200" height="40"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" placeholder="YES" id="7FG-Qh-4nd"/>
+                                    <constraint firstAttribute="height" constant="40" id="VKW-th-AeQ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -28,6 +36,8 @@
                             <constraint firstItem="aaw-Cq-5z0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="13b-fS-eus"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="aaw-Cq-5z0" secondAttribute="trailing" id="P2R-Yu-rmt"/>
                             <constraint firstItem="aaw-Cq-5z0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="WWf-GN-xUi"/>
+                            <constraint firstItem="Ubf-tl-72a" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="cB9-9m-cMf"/>
+                            <constraint firstItem="Ubf-tl-72a" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="fSJ-sU-2Jp"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="aaw-Cq-5z0" secondAttribute="bottom" id="zlM-pI-w4k"/>
                         </constraints>
                     </view>
@@ -219,6 +229,14 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aUf-fa-5cZ" customClass="PendingLocationView" customModule="past_nyc" customModuleProvider="target">
+                                <rect key="frame" x="10" y="88" width="200" height="40"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="1vU-T6-rqU"/>
+                                    <constraint firstAttribute="width" constant="200" placeholder="YES" id="dCW-Oi-elZ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="x68-8F-Eol"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -227,6 +245,8 @@
                             <constraint firstItem="bOE-yl-z0h" firstAttribute="leading" secondItem="x68-8F-Eol" secondAttribute="leading" id="UH8-Pq-Pja"/>
                             <constraint firstItem="x68-8F-Eol" firstAttribute="bottom" secondItem="bOE-yl-z0h" secondAttribute="bottom" id="c1X-iD-NUS"/>
                             <constraint firstItem="bOE-yl-z0h" firstAttribute="top" secondItem="x68-8F-Eol" secondAttribute="top" id="c94-ZS-8EN"/>
+                            <constraint firstItem="aUf-fa-5cZ" firstAttribute="leading" secondItem="x68-8F-Eol" secondAttribute="leading" constant="10" id="dYm-ee-kim"/>
+                            <constraint firstItem="aUf-fa-5cZ" firstAttribute="top" secondItem="x68-8F-Eol" secondAttribute="top" id="eO6-x5-Tau"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Nearby Images" id="ZA5-Y2-xuf"/>
