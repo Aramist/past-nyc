@@ -61,7 +61,7 @@ class WrapperAnnotationView: MKAnnotationView {
     // MARK: Non-inherited methods
     func updateOffset() {
         centerOffset = CGPoint(x: bounds.width / 2, y: -bounds.height / 2)
-        isHidden = false
+//        isHidden = false
     }
 
     func activate() {
