@@ -32,6 +32,9 @@ This app will use your GPS location and show you how the area you're in looked l
 * Map View Screen
    * Allows user to view their current location on a map
    * User can explore the entire city and the images within:
+   * Application startup demo:
+   * <img src="https://github.com/ABKK-CodePath/demo-day/blob/main/docs/location_demo.gif" width="320"/>
+   * Scrolling demo:
    * <img src="https://github.com/ABKK-CodePath/demo-day/blob/main/docs/explore_scene_demo.gif" width="320"/>
 
 * Nearest Picture Screen
