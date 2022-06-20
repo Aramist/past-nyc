@@ -1,80 +1,64 @@
-Original App Design Project - README Template
-===
-
-# PAST NYC (tbd)
+# PAST NYC
 
 ## Table of Contents
 1. [Overview](#Overview)
-1. [Product Spec](#Product-Spec)
-1. [Wireframes](#Wireframes)
-2. [Schema](#Schema)
+2. [Product Spec](#Product-Spec)
+4. [Schema](#Schema)
 
 ## Overview
 ### Description
-This app will use your GPS location and show you how the area you're in looked like in the early 1900s. 
+This app will allow both GPS-based and freely controlled navigation of a collection of New York City's oldest photographs.
 
 ### App Evaluation
-[Evaluation of your app across the following attributes]
-- **Category:** Education
-- **Mobile:** This app would most likely be mobile.
-- **Story:** Analyzes location data and retrieves the closest image from the early 1900s taken nearest to your location. (e.g if you're standing on Astor Pl. you'll see the crossroad of Lafayette St. and Astor Pl. or Broadway and 8th St.)
-- **Market:** Anyone will be able to use this app. No groupings neccesary
-- **Habit:** This app could be used as often as one would like. It would mostly be used for educational purpose.
-- **Scope:** First we can use this app to engage people with the history of NYC. This could evolve to other cities where different version of this app could exist like "PAST Paris" or "PAST London".
+- **Category:** Entertainment
+- **Purpose:** Analyzes location data and retrieves the closest image from the early 1900s taken nearest to your location. (e.g if you're standing on Astor Pl. you'll see the crossroad of Lafayette St. and Astor Pl. or Broadway and 8th St.)
+- **Market:** This app is mostly directed toward residents and visitors of NYC.
+- **Habit:** This app could be used as often as one would like. It could see use for both educational and entertainment purposes.
+- **Scope:** In its current state, this app is designed to immerse people in the deep history of NYC. One planned feature in this vein is the addition of walking tours, which would guide the user through several sites of importance while providing historical imagery and written descriptions. As old photograph collections for more cities are digitized, this project could evolve to cover more parts of the world.
 
 ## Product Spec
 
-### 1. User Stories (Required and Optional)
+### 1. Client-side features
 
-**Required Must-have Stories**
+**Bare minimum:**
 
 - [x] User can view their location on a Map
-- [x] User can view pictures taken nearest to their location
+- [x] User can view historical images captured near their location
+- [x] User can pan around the map to view images captured throughout the city
 
-**Optional Nice-to-have Stories**
+**The cherry on top:**
 
 - [ ] User can register for an account
-- [ ] User can have a favorites section
+- [ ] User can persistently save their favorate images
+- [ ] User can opt to be guided on tours of locations with many images
+- [ ] ? (Taking suggestions in issues page)
 
 ### 2. Screen Archetypes
 
-* Map View Screen
+* "Explore" Map
    * Allows user to view their current location on a map
    * User can explore the entire city and the images within:
-   * <img src="https://github.com/ABKK-CodePath/demo-day/blob/main/docs/explore_scene_demo.gif" width="320"/>
+   * <img src="https://github.com/Aramist/past-nyc/blob/main/docs/explore_scene_demo.gif" width="320"/>
 
-* Nearest Picture Screen
-   * Shows user the picture of the nearest intersection.
-   * Allows user to go back and forth with the next closest picture
-   * Shows crossroad names.
-   * <img src="https://github.com/ABKK-CodePath/demo-day/blob/main/docs/nearby_scene_demo.gif" width="320"/>
+* Nearest Images
+   * Shows user a table of images closest to the user's current location
+   * Shows crossroad names
+   * <img src="https://github.com/Aramist/past-nyc/blob/main/docs/nearby_scene_demo.gif" width="320"/>
 
 ### 3. Navigation
 
-**Tab Navigation** (Tab to Screen)
+**Tab Navigation**
 
-* "View Map"
-* "View Picture"
+* "'Explore' Map"
+* "Nearby"
+* "Favorites" (In the future?)
 
-Optional:
-* "Favorites"
+**Flow Navigation**
 
-**Flow Navigation** (Screen to Screen)
-
-* Show All NYC -> Seperates by boroughs 
-* Show Near me -> Shows pictures taken closest to user
-
-## Wireframes
-[Add picture of your hand sketched wireframes in this section]
-<img src="https://imgur.com/a/ryN75f0" width=600>
-Link: https://imgur.com/a/ryN75f0
-
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
+* Show All NYC -> Sort by borough
+* Show Near me -> Table of pictures near the user -> Any description associated with tapped image
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
 Historical Image model:
 | Property     | Type   | Description                                                         |
