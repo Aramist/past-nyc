@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		800956BB2755244F000B7616 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 800956BA2755244F000B7616 /* GoogleService-Info.plist */; };
 		801490162752B99D006F51EC /* ImageGroup+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801490142752B99D006F51EC /* ImageGroup+CoreDataProperties.swift */; };
+		805DA05727D18C2C00AA17DE /* ExploreMapDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805DA05627D18C2C00AA17DE /* ExploreMapDelegate.swift */; };
 		809D520B27565FB70008A983 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809D520A27565FB70008A983 /* LocationManager.swift */; };
 		80C17044274F406E00397D63 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C17043274F406E00397D63 /* AppDelegate.swift */; };
 		80C17046274F406E00397D63 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C17045274F406E00397D63 /* SceneDelegate.swift */; };
@@ -39,6 +40,7 @@
 		61D8BF34C8862D1AB18CC59B /* Pods-past-nyc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-past-nyc.release.xcconfig"; path = "Target Support Files/Pods-past-nyc/Pods-past-nyc.release.xcconfig"; sourceTree = "<group>"; };
 		800956BA2755244F000B7616 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		801490142752B99D006F51EC /* ImageGroup+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageGroup+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		805DA05627D18C2C00AA17DE /* ExploreMapDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMapDelegate.swift; sourceTree = "<group>"; };
 		809D520A27565FB70008A983 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		80B931F59C83EF7358616255 /* Pods-past-nyc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-past-nyc.debug.xcconfig"; path = "Target Support Files/Pods-past-nyc/Pods-past-nyc.debug.xcconfig"; sourceTree = "<group>"; };
 		80C17040274F406E00397D63 /* past-nyc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "past-nyc.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -189,6 +191,7 @@
 				80C1707D27502D5C00397D63 /* WrapperAnnotationView.swift */,
 				80C1707F27502D7600397D63 /* ClusterDetailViewController.swift */,
 				80C1708627506CDD00397D63 /* MapClusterImageCollectionViewCell.swift */,
+				805DA05627D18C2C00AA17DE /* ExploreMapDelegate.swift */,
 			);
 			path = "Explore Map";
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				80C17063274FFA6C00397D63 /* DataLoader.swift in Sources */,
 				801490162752B99D006F51EC /* ImageGroup+CoreDataProperties.swift in Sources */,
 				80C1708727506CDD00397D63 /* MapClusterImageCollectionViewCell.swift in Sources */,
+				805DA05727D18C2C00AA17DE /* ExploreMapDelegate.swift in Sources */,
 				80C17044274F406E00397D63 /* AppDelegate.swift in Sources */,
 				80C1707E27502D5C00397D63 /* WrapperAnnotationView.swift in Sources */,
 				80C1704E274F406E00397D63 /* past_nyc.xcdatamodeld in Sources */,
