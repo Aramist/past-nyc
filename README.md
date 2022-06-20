@@ -78,6 +78,28 @@ User model:
 | password       | String            | A secure code to verify the user |
 | favoritePhotos | [HistoricalImage] | Images saved by the user         |
 
+Firestore data model:
+ - image_groups (collection)
+    - latitude (float)
+    - longitude (float)
+    - borough (int, enum)
+    - photos (collection)
+        - id (str)
+            * A string that uniquely identifies the image within the NYPL database
+        - thumb_url (str)
+            * A path to a small-res scan of the image
+        - image_url (str)
+            * A path to the full-res scan of the image
+        - width (int)
+            * Full-res image width (pixels)
+        - height (int)
+            * Full-res image height (pixels)
+        - text (str)
+            * Contains a string containing a description of the images. Not present for all images. Sometimes, a single image contains a description for multiple images, all taken at the same time.
+        - folder (str)
+            * The label of the folder in which the physical images resided. Usually contains the name of the image's subject (if of a building or structure) or the intersection at which the image was taken.
+
+
 ### Networking
 - Requests:
     - Main map screen

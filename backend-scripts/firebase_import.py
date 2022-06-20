@@ -31,7 +31,7 @@ def load_firestore_db():
     """
     cert_path = os.getenv('FIREBASE_CERTIFICATE_PATH')
     if cert_path is None:
-        raise Error('Failed to find certificate to connect to Firebase as admin. Double-check the FIREBASE_CERTIFICATE_PATH environment variable')
+        raise ValueError('Failed to find certificate to connect to Firebase as admin. Double-check the FIREBASE_CERTIFICATE_PATH environment variable')
     cred = credentials.Certificate(cert_path)
     firebase_admin.initialize_app(cred)
     db = firestore.client()

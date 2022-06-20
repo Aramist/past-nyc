@@ -36,6 +36,7 @@ def merge_nearby_points(image_groups, thresh_distance=20):
 
     # This line was taken from a stackoverflow post
     # I can't find the post I referenced, so no link
+    # It's supposed to give me a coordinate in meters, approximately
     meter_projection = pyproj.Transformer.from_crs('epsg:4326', 'epsg:3857')
 
     numpy_data = np.array([
